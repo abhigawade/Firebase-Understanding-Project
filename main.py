@@ -172,3 +172,33 @@ while True:
         break
     else:
         print('Invalid Choice')
+
+"""
+Security Rules
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+   // Rules for the 'users' collection
+    match /users/{userId} {
+      // Only allow users to read/write their own data
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    match /chats/{chatId} {
+      // Anyone authenticated can create a chat room
+      allow create: if request.auth != null;
+      
+      // For reading/writing a specific message within a chat room
+      match /chats/{chatId}/messages/{messageId} {
+        // Only allow users to write their own messages
+        allow read : if request.auth != null;
+        allow write: if request.auth != null && request.auth.token.email == resource.data.send_by;
+    }
+    }
+  }
+}
+
+"""
